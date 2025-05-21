@@ -1,0 +1,57 @@
+route_task:
+  description: >
+    conversations\n
+    -------------\n
+    {conversation}
+    -------------\n
+
+    Review the conversation with the user above and identified missing information required to proceed with doctor's appointment.
+    You must return either one of the following - ['rag','book']
+    The instruction for each of the item is as follows:
+    rag - return this when the latest user's query is not related to booking appointment.
+    book - return this when the latest user's query is related to booking.
+    
+  expected_output: >
+    Return text ONLY without any quotes.
+  agent: sports_specialist
+
+rag_task:
+  description: >
+    {conversation}
+    Your task is to reply to user using based on the information you have gathered using tool provided. You may use your general knowledge if provide tool did not provided relevant information.
+  expected_output: >
+    Return text ONLY without any quotes.
+  agent: sports_specialist
+
+extract_task:
+  description: >
+    conversations\n
+    -------------\n
+    {conversation}
+    -------------\n
+    Your task is to extract the symptoms, name, age, gender, sport and time from the conversation.
+
+  expected_output: >
+    Return in JSON string format with following keys ['user_name', 'age','gender', 'sport', 'time'].
+    If the information doesn't exist use null value as placeholder.
+  agent: appointment_admin
+
+update_task:
+  description: >
+    Based on extracted information in JSON, your task is to update csv using csv update tool provided. 
+    You will need to pass the JSON string as input parameter.
+
+  expected_output: >
+    Return in text 'success' or 'fail' based on the result of using the tool.
+    Provide any information return by the tool function as well.
+  agent: appointment_admin
+
+summarize_task:
+  description: >
+    Based on extracted information in JSON, your task is to summarize the booked appointment for the user.
+    Make is as brief as impossible but do not leave out important information.
+    Put reminder for user as you see necessary such as 'Please come 5min earlier to be ready'
+
+  expected_output: >
+    Return in text and use bullet points where suitable.
+  agent: appointment_admin
